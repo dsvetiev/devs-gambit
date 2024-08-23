@@ -94,4 +94,20 @@ export class ChessBoard {
         }
         return false;
     }
+
+    private isPositionSafeAfterMove(piece: Piece, prevX: number, prevY: number, newX: number, newY: number): boolean {
+        const newPiece: Piece | null = this.chessBoard[newX][newY];
+
+        if(newPiece && newPiece.color === piece.color) return false;
+
+        this.chessBoard[prevX][prevY] = null;
+        this.chessBoard[newX][newY] = piece;
+
+        const isPositionSafe: boolean = !this.isInCheck(piece.color);
+
+        this.chessBoard[prevX][prevY] = piece;
+        this.chessBoard[newX][newY] = newPiece;
+
+        return isPositionSafe;
+    }
 }

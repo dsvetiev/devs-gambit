@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Import CommonModule
+import { CommonModule } from '@angular/common';
 import { ChessBoard } from '../../chess-logic/chess-board';
 import { Color, FENChar, pieceImagePaths } from '../../chess-logic/models';
 

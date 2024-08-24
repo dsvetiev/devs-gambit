@@ -35,6 +35,15 @@ export class ChessBoardComponent {
     this.pieceSafeSquares = this.safeSquares.get(x + "," + y) || [];
   };
 
+  public isSquareSelected(x: number, y: number): boolean {
+    if(!this.selectedSquare.piece) return false;
+    return this.selectedSquare.x === x && this.selectedSquare.y === y;
+  };
+
+  public isSquareSafeForSelectingPiece(x: number, y: number): boolean {
+    return this.pieceSafeSquares.some(coords => coords.x === x && coords.y === y)
+  };
+
   public get safeSquares(): SafeSquares {
     return this.chessBoard.safeSquares;
   };

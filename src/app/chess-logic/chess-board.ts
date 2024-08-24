@@ -1,4 +1,3 @@
-import { of } from "rxjs";
 import { Color, Coords, FENChar, SafeSquares } from "./models";
 import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
@@ -13,6 +12,7 @@ export class ChessBoard {
     private chessBoard: (Piece | null)[][];
     private _playerColor = Color.White;
     private readonly chessBoardSize: number = 8;
+    private _safeSquares: SafeSquares;
 
     constructor() {
 
@@ -38,7 +38,8 @@ export class ChessBoard {
                 new King(Color.Black), new Bishop(Color.Black), new Knight(Color.Black), new Rook(Color.Black)
             ]
 
-        ]
+        ];
+        this._safeSquares = this.findSafeSquares();
     }
 
     public get playerColor(): Color {
@@ -167,5 +168,9 @@ export class ChessBoard {
             }
         }
         return safeSquares;
+    }
+
+    public get safeSquares(): SafeSquares {
+        return this._safeSquares;
     }
 }

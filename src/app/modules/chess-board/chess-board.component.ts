@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChessBoard } from '../../chess-logic/chess-board';
-import { Color, FENChar, pieceImagePaths } from '../../chess-logic/models';
+import { Color, Coords, FENChar, pieceImagePaths } from '../../chess-logic/models';
+import { SelectedSquare } from './models';
 
 @Component({
   selector: 'app-chess-board',
@@ -15,6 +16,9 @@ export class ChessBoardComponent {
 
   private chessBoard = new ChessBoard();
   public chessBoardView: (FENChar | null)[][] = this.chessBoard.chessBoardView;
+  private selectedSquare: SelectedSquare = { piece: null };
+  private pieceSafeSquares: Coords[] = [];
+
   public get playerColor(): Color { return this.chessBoard.playerColor; } 
 
   public isSquareDark(x: number, y: number): boolean {

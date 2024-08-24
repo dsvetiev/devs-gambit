@@ -24,4 +24,11 @@ export class ChessBoardComponent {
   public isSquareDark(x: number, y: number): boolean {
     return ChessBoard.isSquareDark(x, y);
   }
+
+  public selectingPiece(x: number, y: number): void {
+    const piece: FENChar | null = this.chessBoardView[x][y];
+    if(!piece) return;
+
+    this.selectedSquare = { piece, x, y};
+  }
 }

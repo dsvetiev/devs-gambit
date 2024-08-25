@@ -114,81 +114,53 @@ export class ChessBoard {
     }
 
     private findSafeSquares(): SafeSquares {
-        console.log('findSafeSquares started');
         const safeSquares: SafeSquares = new Map<string, Coords[]>();
-        console.log(safeSquares);
+        
     
         for (let x = 0; x < this.chessBoardSize; x++) {
             for (let y = 0; y < this.chessBoardSize; y++) {
                 const piece: Piece | null = this.chessBoard[x][y];
                 if (!piece || piece.color !== this._playerColor) continue;
     
-                console.log(`Evaluating piece at (${x}, ${y})`);
-    
                 const pieceSafeSquares: Coords[] = [];
-                    console.log(pieceSafeSquares)
+                    
                 for (const { x: dx, y: dy } of piece.directions) {
-                    console.log(x, y, dx, dy);
-                    console.log(piece);
+
                     let newX: number = x + dx;
                     let newY: number = y + dy;
-                    console.log(newX, newY);
-                    if (!this.areCoordsValid(newX, newY)) {
-                        console.log(`Invalid coordinates: (${newX}, ${newY})`);
-                        continue;
-                    }
+                    
+                    if (!this.areCoordsValid(newX, newY)) continue;
     
                     let newPiece: Piece | null = this.chessBoard[newX][newY];
-                    console.log(newPiece);
-                    if (newPiece && newPiece.color === piece.color) {
-                        console.log(`Same color piece at: (${newX}, ${newY})`);
-                        continue;
-                    }
+                    
+                    if (newPiece && newPiece.color === piece.color) continue;
     
                     if (piece instanceof Pawn) {
                         if (dx === 2 || dx === -2) {
-                            if (newPiece) {
-                                console.log(`Blocked by piece at: (${newX}, ${newY})`);
-                                continue;
-                            }
-                            if (this.chessBoard[newX + (dx === 2 ? -1 : 1)][newY]) {
-                                console.log(`Blocked by piece at: (${newX + (dx === 2 ? -1 : 1)}, ${newY})`);
-                                continue;
-                            }
+                            if (newPiece) continue;
+                            if (this.chessBoard[newX + (dx === 2 ? -1 : 1)][newY]) continue;
                         }
     
-                        if ((dx === 1 || dx === -1) && dy === 0 && newPiece) {
-                            console.log(`Blocked by piece at: (${newX}, ${newY})`);
-                            continue;
-                        }
+                        if ((dx === 1 || dx === -1) && dy === 0 && newPiece) continue;
     
-                        if ((dy === 1 || dy === -1) && (!newPiece || piece.color === newPiece.color)) {
-                            console.log(`Invalid capture move at: (${newX}, ${newY})`);
-                            continue;
-                        }
+                        if ((dy === 1 || dy === -1) && (!newPiece || piece.color === newPiece.color)) continue;
                     }
                     if (piece instanceof Pawn || piece instanceof Knight || piece instanceof King) {
                         if (this.isPositionSafeAfterMove(piece, x, y, newX, newY)) {
                             pieceSafeSquares.push({ x: newX, y: newY });
-                            console.log(`Safe square added for (${x}, ${y}) to (${newX}, ${newY})`);
                         }
                     } else {
                         while (this.areCoordsValid(newX, newY)) {
                             newPiece = this.chessBoard[newX][newY];
                             if (newPiece && newPiece.color === piece.color) {
-                                console.log(`Same color piece at: (${newX}, ${newY})`);
                                 break;
                             }
     
                             if (this.isPositionSafeAfterMove(piece, x, y, newX, newY)) {
                                 pieceSafeSquares.push({ x: newX, y: newY });
-                                console.log(`Safe square added for (${x}, ${y}) to (${newX}, ${newY})`);
                             }
     
-                            if (newPiece !== null) {
-                                console.log(`Blocked by piece at: (${newX}, ${newY})`);
-                                break;
-                            }
+                            if (newPiece !== null) break;
     
                             newX += dx;
                             newY += dy;
@@ -196,13 +168,11 @@ export class ChessBoard {
                     }
                 }
     
-                if (pieceSafeSquares.length) {
-                    safeSquares.set(x + ',' + y, pieceSafeSquares);
-                    console.log(`Safe squares for piece at (${x}, ${y}):`, pieceSafeSquares);
-                }
+                if (pieceSafeSquares.length) safeSquares.set(x + ',' + y, pieceSafeSquares);
+
             }
         }
-        console.log('findSafeSquares completed');
+        
         return safeSquares;
     }
 
@@ -211,23 +181,15 @@ export class ChessBoard {
     }
 
     public move(prevX: number, prevY: number, newX: number, newY: number): void {
-        console.log(`ChessBoard.move called with (${prevX}, ${prevY}) to (${newX}, ${newY})`);
-        if(!this.areCoordsValid(prevX, prevY) || !this.areCoordsValid(newX, newY)) {
-            console.error('Invalid coordinates');
-            return;
-        }
+        
+        if(!this.areCoordsValid(prevX, prevY) || !this.areCoordsValid(newX, newY)) return;
         const piece: Piece | null = this.chessBoard[prevX][prevY];
-        if(!piece || piece.color !== this._playerColor) {
-            console.error('No piece to move or wrong player color');
-            return;
-        }
+        if(!piece || piece.color !== this._playerColor) return;
 
         const pieceSafeSquares: Coords[] | undefined = this._safeSquares.get(prevX + ',' + prevY);
         if(!pieceSafeSquares || !pieceSafeSquares.find(coords => coords.x === newX && coords.y === newY)) {
             throw new Error('Square is not safe');
         }
-
-        console.log(`Moving piece: ${piece.constructor.name} from (${prevX}, ${prevY}) to (${newX}, ${newY})`);
 
         if((piece instanceof Pawn || piece instanceof King || piece instanceof Rook) && !piece.hasMoved)
             piece.hasMoved = true;
@@ -235,12 +197,7 @@ export class ChessBoard {
         this.chessBoard[prevX][prevY] = null;
         this.chessBoard[newX][newY] = piece;
 
-        console.log(`Board state after move:`);
-        console.table(this.chessBoard.map(row => row.map(p => p ? p.constructor.name[0] : null)));
-
         this._playerColor = this._playerColor === Color.White ? Color.Black : Color.White;
-        console.log(this._playerColor);
         this._safeSquares = this.findSafeSquares();
-        console.log(`Piece moved successfully, new player color: ${this._playerColor}`);
     }
 }

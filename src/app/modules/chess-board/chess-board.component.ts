@@ -34,7 +34,6 @@ export class ChessBoardComponent {
 
     this.selectedSquare = { piece, x, y };
     this.pieceSafeSquares = this.safeSquares.get(x + "," + y) || [];
-    console.log(`Selected piece: ${piece}, Safe squares: ${JSON.stringify(this.pieceSafeSquares)}`);
   };
 
   public isSquareSelected(x: number, y: number): boolean {
@@ -57,18 +56,12 @@ export class ChessBoardComponent {
   }
 
   private placingPiece(newX: number, newY: number): void {
-    console.log(`Placing piece at (${newX}, ${newY})`);
     if(!this.selectedSquare.piece) return;
     if(!this.isSquareSafeForSelectingPiece(newX, newY)) return;
 
     const { x: prevX, y: prevY } = this.selectedSquare;
-    try {
       this.chessBoard.move(prevX, prevY, newX, newY);
       this.chessBoardView = this.chessBoard.chessBoardView;
-      console.log(`Moved piece from (${prevX}, ${prevY}) to (${newX}, ${newY})`);
-    } catch (error) {
-      console.error(`Error moving piece: `);
-    }
   }
 
   public move(x: number, y: number): void {

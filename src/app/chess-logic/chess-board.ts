@@ -86,8 +86,8 @@ export class ChessBoard {
 
                             if(attackedPiece !== null) break;
 
-                            newX = x + dx;
-                            newY = y + dy;
+                            newX =+ dx;
+                            newY =+ dy;
                         }
                     }
                 }
@@ -129,6 +129,7 @@ export class ChessBoard {
                     console.log(pieceSafeSquares)
                 for (const { x: dx, y: dy } of piece.directions) {
                     console.log(x, y, dx, dy);
+                    console.log(piece);
                     let newX: number = x + dx;
                     let newY: number = y + dy;
                     console.log(newX, newY);

@@ -54,4 +54,13 @@ export class ChessBoardComponent {
     return isWhitePieceSelected && this.playerColor === Color.Black ||
     !isWhitePieceSelected && this.playerColor === Color.White;
   }
+
+  private placingPiece(newX: number, newY: number): void {
+    if(!this.selectedSquare.piece) return;
+    if(!this.isSquareSafeForSelectingPiece(newX, newY)) return;
+
+    const { x: prevX, y: prevY } = this.selectedSquare;
+    this.chessBoard.move(prevX, prevY, newX, newY);
+    this.chessBoardView = this.chessBoard.chessBoardView;
+  }
 }

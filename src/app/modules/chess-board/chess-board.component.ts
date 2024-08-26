@@ -37,6 +37,9 @@ export class ChessBoardComponent {
     if(!piece) return;
     if(this.isWrongPieceSelected(piece)) return;
 
+    const isSameSquareClicked: boolean = !!this.selectedSquare.piece && this.selectedSquare.x === x && this.selectedSquare.y === y;
+    this.unmarkingPreviouslySelectedAndSafeSquares();
+    if(isSameSquareClicked) return;
     this.selectedSquare = { piece, x, y };
     this.pieceSafeSquares = this.safeSquares.get(x + "," + y) || [];
   };

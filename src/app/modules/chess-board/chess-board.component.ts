@@ -27,6 +27,11 @@ export class ChessBoardComponent {
     return ChessBoard.isSquareDark(x, y);
   };
 
+  public unmarkingPreviouslySelectedAndSafeSquares(): void {
+    this.selectedSquare = { piece: null };
+    this.pieceSafeSquares = [];
+  }
+
   public selectingPiece(x: number, y: number): void {
     const piece: FENChar | null = this.chessBoardView[x][y];
     if(!piece) return;
@@ -62,6 +67,7 @@ export class ChessBoardComponent {
     const { x: prevX, y: prevY } = this.selectedSquare;
       this.chessBoard.move(prevX, prevY, newX, newY);
       this.chessBoardView = this.chessBoard.chessBoardView;
+      this.unmarkingPreviouslySelectedAndSafeSquares();
   }
 
   public move(x: number, y: number): void {

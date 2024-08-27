@@ -236,6 +236,8 @@ export class ChessBoard {
         if((piece instanceof Pawn || piece instanceof King || piece instanceof Rook) && !piece.hasMoved)
             piece.hasMoved = true;
 
+        this.handlingSpecialMoves(piece, prevX, prevY, newX, newY);
+
         this.chessBoard[prevX][prevY] = null;
         this.chessBoard[newX][newY] = piece;
 
@@ -243,5 +245,18 @@ export class ChessBoard {
         this._playerColor = this._playerColor === Color.White ? Color.Black : Color.White;
         this.isInCheck(this._playerColor, true);
         this._safeSquares = this.findSafeSquares();
+    }
+
+    private handlingSpecialMoves(piece: Piece, prevX: number, prevY: number, newX: number, newY: number): void {
+        if(piece instanceof King && Math.abs(newY - prevY) === 2) {
+            
+            const rookPositionX: number = prevX;
+            const rookPositionY: number = newY > prevY ? 7 : 0;
+            const rook = this.chessBoard[rookPositionX][rookPositionY] as Rook;
+            const rookNewPositionY: number = newY > prevY ? 5 : 3;
+            this.chessBoard[rookPositionX][rookPositionY] = null;
+            this.chessBoard[rookPositionX][rookNewPositionY] = rook;
+            rook.hasMoved = true;
+        }
     }
 }

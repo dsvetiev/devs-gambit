@@ -189,6 +189,8 @@ export class ChessBoard {
                     if(this.canCastle(piece, true)) pieceSafeSquares.push({ x, y : 6});
                     if(this.canCastle(piece, false)) pieceSafeSquares.push({ x, y : 2});
                 }
+                else if(piece instanceof Pawn && this.canCaptureEnPassant(piece, x, y))
+                    pieceSafeSquares.push({ x: x + (piece.color === Color.White ? 1 : -1), y: this._lastMove!.prevY });
                 if (pieceSafeSquares.length) safeSquares.set(x + ',' + y, pieceSafeSquares);
 
             }
@@ -199,6 +201,28 @@ export class ChessBoard {
 
     public get safeSquares(): SafeSquares {
         return this._safeSquares;
+    }
+
+    private canCaptureEnPassant(pawn: Pawn, pawnX: number, pawnY: number): boolean {
+        if(!this._lastMove) return false;
+        const { piece, prevX, prevY, currX, currY } = this._lastMove;
+
+        if(
+            !(piece instanceof Pawn) ||
+            pawn.color !== this._playerColor ||
+            Math.abs(currX - prevX) !== 2 ||
+            pawnX !== currX ||
+            Math.abs(pawnY - currY) !== 1 
+        ) return false;
+
+        const pawnNewPositionX: number = pawnX + (pawn.color === Color.White ? 1 : -1);
+        const pawnNewPositionY: number = currY;
+
+        this.chessBoard[currX][currY] = null;
+        const isPositionSafe: boolean = this.isPositionSafeAfterMove(pawn, pawnX, pawnY, pawnNewPositionX, pawnNewPositionY);
+        this.chessBoard[currX][currY] = piece;  
+
+        return isPositionSafe;
     }
 
     private canCastle(king: King, kingSideCastle: boolean): boolean {

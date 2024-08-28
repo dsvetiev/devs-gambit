@@ -107,6 +107,13 @@ export class ChessBoardComponent {
     this.unmarkingPreviouslySelectedAndSafeSquares();
   }
 
+  public promotePiece(piece: FENChar): void {
+    if(!this.promotionCoords || !this.selectedSquare.piece) return;
+    this.promotedPiece = piece;
+    const { x: newX, y: newY } = this.promotionCoords;
+    const { x: prevX, y: prevY } = this.selectedSquare;
+  }
+
   public move(x: number, y: number): void {
     this.selectingPiece(x, y);
     this.placingPiece(x, y);

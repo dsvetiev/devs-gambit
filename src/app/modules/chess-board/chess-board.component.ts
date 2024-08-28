@@ -21,9 +21,19 @@ export class ChessBoardComponent {
   private lastMove: LastMove | undefined = this.chessBoard.lastMove;
   private checkState: CheckState = this.chessBoard.checkState;
 
+  public isPromotionActive: boolean = false;
+  private promotionCoords: Coords | null = null;
+  private promotedPiece: FENChar | null = null;
+
   public get playerColor(): Color { 
     return this.chessBoard.playerColor; 
   };
+ 
+   public promotionPieces(): FENChar[] {
+    return this.playerColor === Color.White ? 
+    [FENChar.WhiteKnight, FENChar.WhiteBishop, FENChar.WhiteRook, FENChar.WhiteQueen] :
+    [FENChar.BlackKnight, FENChar.BlackBishop, FENChar.BlackRook, FENChar.BlackQueen];
+  }
 
   public isSquareDark(x: number, y: number): boolean {
     return ChessBoard.isSquareDark(x, y);
@@ -79,12 +89,22 @@ export class ChessBoardComponent {
     if(!this.selectedSquare.piece) return;
     if(!this.isSquareSafeForSelectingPiece(newX, newY)) return;  
 
+    const isPawnSelected: boolean = this.selectedSquare.piece === FENChar.WhitePawn || this.selectedSquare.piece === FENChar.BlackPawn;
+    const isPawnOnLastRank: boolean = isPawnSelected && (newX === 7 || newX === 0);
+    const shouldOpenPromotionDialog: boolean =  !this.isPromotionActive && isPawnOnLastRank;
+
+    if(shouldOpenPromotionDialog) {
+      this.isPromotionActive = true;
+      this.promotionCoords = { x: newX, y: newY };
+      return;
+    }
+
     const { x: prevX, y: prevY } = this.selectedSquare;
-      this.chessBoard.move(prevX, prevY, newX, newY);
-      this.chessBoardView = this.chessBoard.chessBoardView;
-      this.checkState = this.chessBoard.checkState;
-      this.lastMove = this.chessBoard.lastMove;
-      this.unmarkingPreviouslySelectedAndSafeSquares();
+    this.chessBoard.move(prevX, prevY, newX, newY, null);
+    this.chessBoardView = this.chessBoard.chessBoardView;
+    this.checkState = this.chessBoard.checkState;
+    this.lastMove = this.chessBoard.lastMove;
+    this.unmarkingPreviouslySelectedAndSafeSquares();
   }
 
   public move(x: number, y: number): void {

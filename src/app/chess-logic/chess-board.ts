@@ -114,7 +114,10 @@ export class ChessBoard {
         return false;
     }
 
-    private isPositionSafeAfterMove(piece: Piece, prevX: number, prevY: number, newX: number, newY: number): boolean {
+    private isPositionSafeAfterMove(prevX: number, prevY: number, newX: number, newY: number): boolean {
+        const piece: Piece | null = this.chessBoard[prevX][prevY];
+        if(!piece) return false;
+
         const newPiece: Piece | null = this.chessBoard[newX][newY];
 
         if(newPiece && newPiece.color === piece.color) return false;
@@ -163,7 +166,7 @@ export class ChessBoard {
                         if ((dy === 1 || dy === -1) && (!newPiece || piece.color === newPiece.color)) continue;
                     }
                     if (piece instanceof Pawn || piece instanceof Knight || piece instanceof King) {
-                        if (this.isPositionSafeAfterMove(piece, x, y, newX, newY)) {
+                        if (this.isPositionSafeAfterMove(x, y, newX, newY)) {
                             pieceSafeSquares.push({ x: newX, y: newY });
                         }
                     } else {
@@ -173,7 +176,7 @@ export class ChessBoard {
                                 break;
                             }
     
-                            if (this.isPositionSafeAfterMove(piece, x, y, newX, newY)) {
+                            if (this.isPositionSafeAfterMove(x, y, newX, newY)) {
                                 pieceSafeSquares.push({ x: newX, y: newY });
                             }
     
@@ -219,7 +222,7 @@ export class ChessBoard {
         const pawnNewPositionY: number = currY;
 
         this.chessBoard[currX][currY] = null;
-        const isPositionSafe: boolean = this.isPositionSafeAfterMove(pawn, pawnX, pawnY, pawnNewPositionX, pawnNewPositionY);
+        const isPositionSafe: boolean = this.isPositionSafeAfterMove(pawnX, pawnY, pawnNewPositionX, pawnNewPositionY);
         this.chessBoard[currX][currY] = piece;  
 
         return isPositionSafe;
@@ -243,8 +246,8 @@ export class ChessBoard {
 
         if(!kingSideCastle && this.chessBoard[kingPositionX][1]) return false;
 
-        return this.isPositionSafeAfterMove(king, kingPositionX, kingPositionY, kingPositionX, firstNextKingPositionY) && 
-        this.isPositionSafeAfterMove(king, kingPositionX, kingPositionY, kingPositionX, secondNextKingPositionY);
+        return this.isPositionSafeAfterMove(kingPositionX, kingPositionY, kingPositionX, firstNextKingPositionY) && 
+        this.isPositionSafeAfterMove(kingPositionX, kingPositionY, kingPositionX, secondNextKingPositionY);
     }
     public move(prevX: number, prevY: number, newX: number, newY: number, promotedPieceType: FENChar | null): void {
         

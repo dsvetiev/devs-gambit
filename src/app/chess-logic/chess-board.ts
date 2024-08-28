@@ -246,7 +246,7 @@ export class ChessBoard {
         return this.isPositionSafeAfterMove(king, kingPositionX, kingPositionY, kingPositionX, firstNextKingPositionY) && 
         this.isPositionSafeAfterMove(king, kingPositionX, kingPositionY, kingPositionX, secondNextKingPositionY);
     }
-    public move(prevX: number, prevY: number, newX: number, newY: number): void {
+    public move(prevX: number, prevY: number, newX: number, newY: number, promotedPieceType: FENChar | null): void {
         
         if(!this.areCoordsValid(prevX, prevY) || !this.areCoordsValid(newX, newY)) return;
         const piece: Piece | null = this.chessBoard[prevX][prevY];
@@ -262,8 +262,13 @@ export class ChessBoard {
 
         this.handlingSpecialMoves(piece, prevX, prevY, newX, newY);
 
+        if(promotedPieceType){
+            this.chessBoard[newX][newY] = this.promotedPiece(promotedPieceType);
+        } else {
+            this.chessBoard[newX][newY] = piece;
+        }
+
         this.chessBoard[prevX][prevY] = null;
-        this.chessBoard[newX][newY] = piece;
 
         this._lastMove = { prevX, prevY, currX: newX, currY: newY, piece };
         this._playerColor = this._playerColor === Color.White ? Color.Black : Color.White;

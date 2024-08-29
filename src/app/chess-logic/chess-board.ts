@@ -16,6 +16,9 @@ export class ChessBoard {
     private _lastMove: LastMove | undefined;
     private _checkState: CheckState = { isInCheck: false };
 
+    private _isGameOver: boolean = false;
+    private _gameOverMessage: string | undefined;
+
     constructor() {
 
         this.chessBoard = [
@@ -60,6 +63,14 @@ export class ChessBoard {
 
     public get checkState(): CheckState {
         return this._checkState;
+    }
+
+    public get isGameOver(): boolean {
+        return this._isGameOver;
+    }
+
+    public get gameOverMessage(): string | undefined {
+        return this._gameOverMessage;
     }
 
     public static isSquareDark(x: number, y: number): boolean {

@@ -344,4 +344,10 @@ export class ChessBoard {
         }
         return false;
     }
+
+    private playerHasOnlyTwoKnightsAndKing(pieces: { piece: Piece, x: number, y: number }[]): boolean {
+        return pieces.filter(piece => piece.piece instanceof Knight).length === 2;
+    }
+
+    
 }

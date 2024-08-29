@@ -288,6 +288,7 @@ export class ChessBoard {
         this._playerColor = this._playerColor === Color.White ? Color.Black : Color.White;
         this.isInCheck(this._playerColor, true);
         this._safeSquares = this.findSafeSquares();
+        this._isGameOver = this.isGameFinished();
     }
 
     private handlingSpecialMoves(piece: Piece, prevX: number, prevY: number, newX: number, newY: number): void {
@@ -321,5 +322,18 @@ export class ChessBoard {
         if(promotedPieceType === FENChar.WhiteRook || promotedPieceType === FENChar.BlackRook)
             return new Rook(this._playerColor);
         return new Queen(this._playerColor);
+    }
+
+    private isGameFinished(): boolean {
+        if(!this._safeSquares.size) {
+            if(this._checkState.isInCheck) {
+                const prevPlayer: string = this._playerColor === Color.White ? 'Black' : 'White';
+                this._gameOverMessage = prevPlayer + ' won by checkmate';
+            }
+            else this._gameOverMessage = 'Stalemate'
+
+            return true;
+        }
+        return false;
     }
 }

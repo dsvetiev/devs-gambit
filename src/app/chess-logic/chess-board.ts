@@ -114,8 +114,8 @@ export class ChessBoard {
 
                             if(attackedPiece !== null) break;
 
-                            newX =+ dx;
-                            newY =+ dy;
+                            newX += dx;
+                            newY += dy;
                         }
                     }
                 }

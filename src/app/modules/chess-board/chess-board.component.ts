@@ -55,6 +55,7 @@ export class ChessBoardComponent {
   }
 
   public selectingPiece(x: number, y: number): void {
+    if(this.gameOverMessage !== undefined) return;
     const piece: FENChar | null = this.chessBoardView[x][y];
     if(!piece) return;
     if(this.isWrongPieceSelected(piece)) return;

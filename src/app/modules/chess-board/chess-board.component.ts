@@ -28,6 +28,10 @@ export class ChessBoardComponent {
   public get playerColor(): Color { 
     return this.chessBoard.playerColor; 
   };
+
+  public get gameOverMessage(): string | undefined {
+    return this.chessBoard.gameOverMessage;
+  }
  
    public promotionPieces(): FENChar[] {
     return this.playerColor === Color.White ? 

@@ -1,3 +1,4 @@
+import { numberAttribute } from "@angular/core";
 import { columns } from "../modules/chess-board/models";
 import { Color, LastMove } from "./models";
 import { King } from "./pieces/king";
@@ -12,6 +13,7 @@ export class FENConverter {
         playerColor: Color,
         lastMove: LastMove | undefined,
         fiftyMoveRuleCounter: number,
+        numberOfFullMoves: number
     ) : string {
 
         let FEN = '';
@@ -39,7 +41,12 @@ export class FENConverter {
         }
 
         const player: string = playerColor === Color.White ? 'w' : 'b';
-        
+        FEN += ' ' + player;
+        FEN += ' ' + this.castlingAvailability(board);
+        FEN += ' ' + this.enPassantPossibility(lastMove, playerColor);
+        FEN += ' ' + fiftyMoveRuleCounter * 2;
+        FEN += ' ' + numberOfFullMoves;
+
         return FEN;
     }
 

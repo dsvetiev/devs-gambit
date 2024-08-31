@@ -1,11 +1,13 @@
 import { Color, LastMove } from "./models";
+import { King } from "./pieces/king";
 import { Piece } from "./pieces/piece";
+import { Rook } from "./pieces/rook";
 
 export class FENConverter {
 
     public convertBoardToFEN (
         board: (Piece | null)[][],
-        platerColor: Color,
+        playerColor: Color,
         lastMove: LastMove | undefined,
         fiftyMoveRuleCounter: number,
     ) : string {
@@ -33,8 +35,34 @@ export class FENConverter {
             FEN += (i === 0) ? FENRow : FENRow + '/';
             
         }
+
+        const player: string = playerColor === Color.White ? 'w' : 'b';
         
         return FEN;
+    }
+
+    private castlingAvailability(board: (Piece | null)[][]): string {
+        const castlingPossibilities = (color: Color): string => {
+            let castlingAvailability: string = '';
+
+            const  kingPositionX: number = color === Color.White ? 0 : 7;
+            const king: Piece | null = board[kingPositionX][4];
+
+            if(king instanceof King && !king.hasMoved) {
+                const rookPositionX: number = kingPositionX;
+                const kingSideRook = board[rookPositionX][7];
+                const queenSideRook = board[rookPositionX][0];
+
+                if (kingSideRook instanceof Rook && !kingSideRook.hasMoved) castlingAvailability += 'k';
+                if (queenSideRook instanceof Rook && !queenSideRook.hasMoved) castlingAvailability += 'q';
+                if (color === Color.White) castlingAvailability = castlingAvailability.toUpperCase();
+
+            }
+            return castlingAvailability;
+        }
+
+        const castlingAvailability: string = castlingPossibilities(Color.White) + castlingPossibilities(Color.Black);
+        return castlingAvailability !== '' ? castlingAvailability : '-';
     }
 
     

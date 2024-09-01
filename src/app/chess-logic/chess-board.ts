@@ -348,6 +348,11 @@ export class ChessBoard {
 
             return true;
         }
+
+        if(this.threeFoldRepetitionFlag) {
+            this._gameOverMessage = 'Draw due to three fold repetition rule';
+            return true;
+        }
         if(this.fiftyMoveCounter === 50) {
             this._gameOverMessage = 'Draw due to fifty move rule';
             return true;

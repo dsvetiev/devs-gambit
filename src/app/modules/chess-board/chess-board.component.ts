@@ -24,6 +24,7 @@ export class ChessBoardComponent {
   public isPromotionActive: boolean = false;
   private promotionCoords: Coords | null = null;
   private promotedPiece: FENChar | null = null;
+  public flipMode: boolean = false;
 
   public get playerColor(): Color { 
     return this.chessBoard.playerColor; 
@@ -31,6 +32,10 @@ export class ChessBoardComponent {
 
   public get gameOverMessage(): string | undefined {
     return this.chessBoard.gameOverMessage;
+  }
+
+  public flipBoard(): void {
+    this.flipMode = !this.flipMode;
   }
  
    public promotionPieces(): FENChar[] {

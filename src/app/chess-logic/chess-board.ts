@@ -1,3 +1,4 @@
+import { FENConverter } from "./FENConverter";
 import { CheckState, Color, Coords, FENChar, LastMove, SafeSquares } from "./models";
 import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
@@ -23,6 +24,9 @@ export class ChessBoard {
     private fullNumberOfMoves: number = 1;
     private threeFoldRepetitionDictionary = new Map<string, number>();
     private threeFoldRepetitionFlag: boolean = false;
+
+    private _boardAsFEN: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
+    private FENConverter = new FENConverter();
 
     constructor() {
 
@@ -76,6 +80,10 @@ export class ChessBoard {
 
     public get gameOverMessage(): string | undefined {
         return this._gameOverMessage;
+    }
+
+    public get boardAsFEN(): string {
+        return this._boardAsFEN;
     }
 
     public static isSquareDark(x: number, y: number): boolean {
@@ -296,9 +304,13 @@ export class ChessBoard {
         this._playerColor = this._playerColor === Color.White ? Color.Black : Color.White;
         this.isInCheck(this._playerColor, true);
         this._safeSquares = this.findSafeSquares();
-        this._isGameOver = this.isGameFinished();
+        
 
         if(this._playerColor === Color.White) this.fullNumberOfMoves++;
+        this._boardAsFEN = this.FENConverter.convertBoardToFEN(this.chessBoard, this._playerColor, this._lastMove, this.fiftyMoveCounter, this.fullNumberOfMoves);
+        this.updateThreeFoldRepetitionDictionary(this._boardAsFEN);
+
+        this._isGameOver = this.isGameFinished();
     }
 
     private handlingSpecialMoves(piece: Piece, prevX: number, prevY: number, newX: number, newY: number): void {

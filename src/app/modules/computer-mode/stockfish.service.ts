@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, of, switchMap } from 'rxjs';
 import { ChessMove, StockfishQueryParams, StockFishResponse } from './models';
 import { FENChar } from '../../chess-logic/models';
 
@@ -44,6 +44,7 @@ export class StockfishService {
     .pipe(
       switchMap(response => {
         const bestMove: string =  response.data.split(' ')[1];
+        return of(this.moveFromStockfishString(bestMove));
       })
     )
   }

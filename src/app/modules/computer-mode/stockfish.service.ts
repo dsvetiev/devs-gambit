@@ -2,6 +2,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, switchMap } from 'rxjs';
 import { ChessMove, StockfishQueryParams, StockFishResponse } from './models';
+import { FENChar } from '../../chess-logic/models';
 
 @Injectable({
   providedIn: 'root'
@@ -14,12 +15,19 @@ export class StockfishService {
     return string.charCodeAt(0) - 'a'.charCodeAt(0);
   }
 
+  private promotedPiece(piece: string | undefined): FENChar | null {
+    if(!piece) return null;
+    if(piece === 'n') return FENChar.BlackKnight;
+    if(piece === 'b') return FENChar.BlackBishop;
+    if(piece === 'r') return FENChar.BlackRook;
+    return FENChar.BlackQueen;
+  }
+
   private moveFromStockfishString(move: string): ChessMove {
     const prevY: number = this.convertColumnLetterToYCoord(move[0]);
     const prevX: number = Number(move[1]) - 1;
     const newY: number = this.convertColumnLetterToYCoord(move[2]);
     const newX: number = Number(move[3]) - 1;
-
   }
   public getBestMove(fen: string): Observable<ChessMove> {
     const queryParams: StockfishQueryParams = {

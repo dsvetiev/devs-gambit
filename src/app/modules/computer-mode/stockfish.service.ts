@@ -28,6 +28,8 @@ export class StockfishService {
     const prevX: number = Number(move[1]) - 1;
     const newY: number = this.convertColumnLetterToYCoord(move[2]);
     const newX: number = Number(move[3]) - 1;
+    const promotedPiece = this.promotedPiece(move[4]);
+    return { prevX, prevY, newX, newY, promotedPiece };
   }
   public getBestMove(fen: string): Observable<ChessMove> {
     const queryParams: StockfishQueryParams = {

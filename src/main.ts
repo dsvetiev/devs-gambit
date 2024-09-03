@@ -1,6 +1,18 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
+import { provideRouter, Routes } from '@angular/router';
 import { AppComponent } from './app/app.component';
+import { ChessBoardComponent } from './app/modules/chess-board/chess-board.component';
+import { ComputerModeComponent } from './app/modules/computer-mode/computer-mode.component';
+import { HttpClientModule } from '@angular/common/http';
 
-bootstrapApplication(AppComponent, appConfig)
-  .catch((err) => console.error(err));
+const routes: Routes = [
+  { path: 'against-friend', component: ChessBoardComponent, title: 'Play against friend' },
+  { path: 'against-computer', component: ComputerModeComponent, title: 'Play against computer' }
+];
+
+bootstrapApplication(AppComponent, {
+  providers: [
+    provideRouter(routes),
+    HttpClientModule
+  ]
+});

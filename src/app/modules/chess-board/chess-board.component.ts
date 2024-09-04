@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { ChessBoard } from '../../chess-logic/chess-board';
 import { CheckState, Color, Coords, FENChar, LastMove, pieceImagePaths, SafeSquares } from '../../chess-logic/models';
 import { SelectedSquare } from './models';
+import { ChessBoardService } from './chess-board.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-chess-board',
@@ -37,6 +39,10 @@ export class ChessBoardComponent {
   public flipBoard(): void {
     this.flipMode = !this.flipMode;
   }
+
+  private subscriptions$ = new Subscription();
+
+  constructor(protected chessBoardService: ChessBoardService) { }
  
    public promotionPieces(): FENChar[] {
     return this.playerColor === Color.White ? 

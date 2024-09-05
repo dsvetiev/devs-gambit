@@ -3,7 +3,7 @@ import { provideRouter, Routes } from '@angular/router';
 import { AppComponent } from './app/app.component';
 import { ChessBoardComponent } from './app/modules/chess-board/chess-board.component';
 import { ComputerModeComponent } from './app/modules/computer-mode/computer-mode.component';
-import { HttpClientModule } from '@angular/common/http';
+import { provideHttpClient } from '@angular/common/http';
 
 const routes: Routes = [
   { path: 'against-friend', component: ChessBoardComponent, title: 'Play against friend' },
@@ -13,6 +13,6 @@ const routes: Routes = [
 bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    HttpClientModule
+    provideHttpClient()
   ]
 });

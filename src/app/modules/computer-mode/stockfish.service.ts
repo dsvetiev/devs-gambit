@@ -35,7 +35,6 @@ export class StockfishService {
     const queryParams: StockfishQueryParams = {
       fen,
       depth : 13,
-      mode: 'bestmove'
     };
 
     let params = new HttpParams().appendAll(queryParams);
@@ -43,7 +42,7 @@ export class StockfishService {
     return this.http.get<StockFishResponse>(this.api, {params})
     .pipe(
       switchMap(response => {
-        const bestMove: string =  response.data.split(' ')[1];
+        const bestMove: string =  response.bestmove.split(' ')[1];
         return of(this.moveFromStockfishString(bestMove));
       })
     )

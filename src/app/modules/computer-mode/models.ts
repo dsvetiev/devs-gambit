@@ -3,7 +3,6 @@ import { FENChar } from "../../chess-logic/models";
 export type StockfishQueryParams = {
     fen: string;
     depth: number;
-    mode: string;
 }
 
 export type ChessMove = {
@@ -16,5 +15,8 @@ export type ChessMove = {
 
 export type StockFishResponse = {
     success: boolean;
-    data: string;
+    evaluation: number | null;
+    mate: number | null;
+    bestmove: string,
+    continuation: string
 }

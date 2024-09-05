@@ -128,10 +128,10 @@ export class ChessBoardComponent {
     }
 
     const { x: prevX, y: prevY } = this.selectedSquare;
-    this.updateBoard(prevX, prevY, newX, newY);
+    this.updateBoard(prevX, prevY, newX, newY, this.promotedPiece);
   }
 
-  private updateBoard(prevX: number, prevY: number, newX: number, newY: number): void {
+  protected updateBoard(prevX: number, prevY: number, newX: number, newY: number, promotedPiece: FENChar | null): void {
     this.chessBoard.move(prevX, prevY, newX, newY, this.promotedPiece);
     this.chessBoardView = this.chessBoard.chessBoardView;
     this.checkState = this.chessBoard.checkState;
@@ -144,7 +144,7 @@ export class ChessBoardComponent {
     this.promotedPiece = piece;
     const { x: newX, y: newY } = this.promotionCoords;
     const { x: prevX, y: prevY } = this.selectedSquare;
-    this.updateBoard(prevX, prevY, newX, newY);
+    this.updateBoard(prevX, prevY, newX, newY, this.promotedPiece);
   }
 
   public move(x: number, y: number): void {

@@ -1,4 +1,4 @@
-import { FENChar } from "../../chess-logic/models";
+import { Color, FENChar } from "../../chess-logic/models";
 
 export type StockfishQueryParams = {
     fen: string;
@@ -19,4 +19,17 @@ export type StockFishResponse = {
     mate: number | null;
     bestmove: string,
     continuation: string
+}
+
+export type ComputerConfiguration = {
+    color: Color;
+    level: number;
+}
+
+export const stockfishLevel: Readonly<Record<number, number>> = {
+    1: 1,
+    2: 4,
+    3: 7,
+    4: 10,
+    5: 13
 }

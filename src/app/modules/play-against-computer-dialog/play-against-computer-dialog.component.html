@@ -1,0 +1,14 @@
+<mat-dialog-content>
+<h2 mat-dialog-title>Stockfish Strength</h2>
+
+<div class="stockfish-strength-container">
+    <div *ngFor="let level of stockfishLevels" class="strength-div">
+        {{level}}
+    </div>
+</div>
+
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+    <button mat-button mat-dialog-close>Cancel</button>
+</mat-dialog-actions>

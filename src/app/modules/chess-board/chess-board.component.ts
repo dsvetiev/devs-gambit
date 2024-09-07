@@ -16,7 +16,7 @@ import { Subscription } from 'rxjs';
 export class ChessBoardComponent {
   public pieceImagePaths = pieceImagePaths;
 
-  private chessBoard = new ChessBoard();
+  protected chessBoard = new ChessBoard();
   public chessBoardView: (FENChar | null)[][] = this.chessBoard.chessBoardView;
   private selectedSquare: SelectedSquare = { piece: null };
   private pieceSafeSquares: Coords[] = [];

@@ -30,9 +30,13 @@ export class PlayAgainstComputerDialogComponent {
     public play(color: 'w' | 'b'): void {
       this.dialog.closeAll();
       this.stockfishService.computerConfiguration$.next({
-        color: color === 'w' ? Color.White : Color.Black,
+        color: color === 'w' ? Color.Black : Color.White,
         level: this.stockfishLevel
       });
       this.router.navigate(['against-computer']);
+    }
+
+    public closeDialog(): void {
+      this.router.navigate(['against-friend'])
     }
 }

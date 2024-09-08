@@ -1,5 +1,5 @@
 import { FENConverter } from "./FENConverter";
-import { CheckState, Color, Coords, FENChar, LastMove, SafeSquares } from "./models";
+import { CheckState, Color, Coords, FENChar, LastMove, MoveType, SafeSquares } from "./models";
 import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
 import { Knight } from "./pieces/knight";
@@ -287,10 +287,13 @@ export class ChessBoard {
         if((piece instanceof Pawn || piece instanceof King || piece instanceof Rook) && !piece.hasMoved)
             piece.hasMoved = true;
 
+        const moveType = new Set<MoveType>();
+
         const isPieceTaken: boolean = this.chessBoard[newX][newY] !== null;
+        if(isPieceTaken) moveType.add(MoveType.Capture)
         if(piece instanceof Pawn || isPieceTaken) this.fiftyMoveCounter = 0;
         else this.fiftyMoveCounter += 0.5;
-        this.handlingSpecialMoves(piece, prevX, prevY, newX, newY);
+        this.handlingSpecialMoves(piece, prevX, prevY, newX, newY, moveType);
 
         if(promotedPieceType){
             this.chessBoard[newX][newY] = this.promotedPiece(promotedPieceType);
@@ -300,12 +303,17 @@ export class ChessBoard {
 
         this.chessBoard[prevX][prevY] = null;
 
-        this._lastMove = { prevX, prevY, currX: newX, currY: newY, piece };
+        this._lastMove = { prevX, prevY, currX: newX, currY: newY, piece, moveType };
         this._playerColor = this._playerColor === Color.White ? Color.Black : Color.White;
         this.isInCheck(this._playerColor, true);
         this._safeSquares = this.findSafeSquares();
-        
 
+        if(this._checkState.isInCheck) {
+            moveType.add(!this._safeSquares.size ? MoveType.CheckMate : MoveType.Check);
+        } else if (!moveType.size) {
+            moveType.add(MoveType.BasicMove);
+        }
+        
         if(this._playerColor === Color.White) this.fullNumberOfMoves++;
         this._boardAsFEN = this.FENConverter.convertBoardToFEN(this.chessBoard, this._playerColor, this._lastMove, this.fiftyMoveCounter, this.fullNumberOfMoves);
         this.updateThreeFoldRepetitionDictionary(this._boardAsFEN);
@@ -313,7 +321,7 @@ export class ChessBoard {
         this._isGameOver = this.isGameFinished();
     }
 
-    private handlingSpecialMoves(piece: Piece, prevX: number, prevY: number, newX: number, newY: number): void {
+    private handlingSpecialMoves(piece: Piece, prevX: number, prevY: number, newX: number, newY: number, moveType: Set<MoveType>): void {
         if(piece instanceof King && Math.abs(newY - prevY) === 2) {
             
             const rookPositionX: number = prevX;
@@ -323,6 +331,7 @@ export class ChessBoard {
             this.chessBoard[rookPositionX][rookPositionY] = null;
             this.chessBoard[rookPositionX][rookNewPositionY] = rook;
             rook.hasMoved = true;
+            moveType.add(MoveType.Castling);
         }
         else if(
             piece instanceof Pawn &&
@@ -333,6 +342,7 @@ export class ChessBoard {
             newY === this._lastMove.currY
         ) {
             this.chessBoard[this._lastMove.currX][this._lastMove.currY] = null;
+            moveType.add(MoveType.Capture)
         }
     }
 

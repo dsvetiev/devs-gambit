@@ -71,3 +71,11 @@ type KingNotChecked = {
 };
 
 export type CheckState = KingChecked | KingNotChecked;
+
+export type MoveList = ([string, string?])[];
+
+export type GameHistory = {
+    lastMove: LastMove | undefined;
+    checkState: CheckState;
+    board: (FENChar | null)[][];
+}

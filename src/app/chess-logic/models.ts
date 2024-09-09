@@ -78,4 +78,4 @@ export type GameHistory = {
     lastMove: LastMove | undefined;
     checkState: CheckState;
     board: (FENChar | null)[][];
-}
+}[];

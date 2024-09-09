@@ -1,5 +1,5 @@
 import { FENConverter } from "./FENConverter";
-import { CheckState, Color, Coords, FENChar, LastMove, MoveType, SafeSquares } from "./models";
+import { CheckState, Color, Coords, FENChar, GameHistory, LastMove, MoveList, MoveType, SafeSquares } from "./models";
 import { Bishop } from "./pieces/bishop";
 import { King } from "./pieces/king";
 import { Knight } from "./pieces/knight";
@@ -28,6 +28,9 @@ export class ChessBoard {
     private _boardAsFEN: string = 'rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1';
     private FENConverter = new FENConverter();
 
+    private _moveList: MoveList = [];
+    private _gameHistory: GameHistory;
+
     constructor() {
 
         this.chessBoard = [
@@ -54,6 +57,7 @@ export class ChessBoard {
 
         ];
         this._safeSquares = this.findSafeSquares();
+        this._gameHistory = [{ board: this.chessBoardView, lastMove: this._lastMove, checkState: this._checkState }]
     }
 
     public get playerColor(): Color {
@@ -81,9 +85,17 @@ export class ChessBoard {
     public get gameOverMessage(): string | undefined {
         return this._gameOverMessage;
     }
-
+    
     public get boardAsFEN(): string {
         return this._boardAsFEN;
+    }
+
+    public get moveList(): MoveList {
+        return this._moveList;
+    }
+
+    public get gameHistory(): GameHistory {
+        return this._gameHistory;
     }
 
     public static isSquareDark(x: number, y: number): boolean {

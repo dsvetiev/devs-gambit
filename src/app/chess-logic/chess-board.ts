@@ -1,3 +1,4 @@
+import { columns } from "../modules/chess-board/models";
 import { FENConverter } from "./FENConverter";
 import { CheckState, Color, Coords, FENChar, GameHistory, LastMove, MoveList, MoveType, SafeSquares } from "./models";
 import { Bishop } from "./pieces/bishop";
@@ -464,6 +465,29 @@ export class ChessBoard {
             }
             this.threeFoldRepetitionDictionary.set(threeFoldRepetitionFENKey, 2);
         }
+    }
+
+    private storeMove(promotedPiece: FENChar | null): void {
+        const { piece, currX, currY, prevX, prevY, moveType } = this._lastMove!;
+        let pieceName: string = !(piece instanceof Pawn) ? piece.FENChar : '';
+        let move: string;
+
+        if(moveType.has(MoveType.Castling)) move = currY - prevY === 2 ? 'O-O' : 'O-0-0';
+        else {
+            move = pieceName + columns[prevY] + String(prevX + 1);
+            if(moveType.has(MoveType.Capture)) move += 'x';
+            move += columns[currY] + String(currX + 1);
+
+            if(promotedPiece) move += '=' + promotedPiece.toUpperCase();
+    }
+
+    if(moveType.has(MoveType.Check)) move += '+';
+    else if(moveType.has(MoveType.CheckMate)) move += '#';
+
+    if(!this._moveList[this.fullNumberOfMoves - 1])
+        this._moveList[this.fullNumberOfMoves - 1] = [move];
+    else
+        this._moveList[this.fullNumberOfMoves - 1].push(move);
     }
     
 }

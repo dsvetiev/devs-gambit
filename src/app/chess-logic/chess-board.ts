@@ -326,6 +326,9 @@ export class ChessBoard {
         } else if (!moveType.size) {
             moveType.add(MoveType.BasicMove);
         }
+
+        this.storeMove(promotedPieceType);
+        this.updateGameHistory();
         
         if(this._playerColor === Color.White) this.fullNumberOfMoves++;
         this._boardAsFEN = this.FENConverter.convertBoardToFEN(this.chessBoard, this._playerColor, this._lastMove, this.fiftyMoveCounter, this.fullNumberOfMoves);
@@ -488,6 +491,14 @@ export class ChessBoard {
         this._moveList[this.fullNumberOfMoves - 1] = [move];
     else
         this._moveList[this.fullNumberOfMoves - 1].push(move);
+    }
+
+    private updateGameHistory(): void {
+        this._gameHistory.push({
+            board: [...this.chessBoardView.map(row => [...row])],
+            checkState: {...this._checkState},
+            lastMove: this._lastMove ? {...this._lastMove} : undefined
+        });
     }
     
 }

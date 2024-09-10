@@ -166,4 +166,12 @@ export class ChessBoardComponent {
   public closePawnPromotionDialog(): void {
     this.unmarkingPreviouslySelectedAndSafeSquares();
   }
+
+  public showPreviousPosition(moveIndex: number): void {
+    const {board, checkState, lastMove} = this.gameHistory[moveIndex];
+    this.chessBoardView = board;
+    this.checkState = checkState;
+    this.lastMove = lastMove;
+    this.gameHistoryPointer = moveIndex;
+  }
 }

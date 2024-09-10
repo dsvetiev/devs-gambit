@@ -1,15 +1,16 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChessBoard } from '../../chess-logic/chess-board';
-import { CheckState, Color, Coords, FENChar, LastMove, pieceImagePaths, SafeSquares } from '../../chess-logic/models';
+import { CheckState, Color, Coords, FENChar, GameHistory, LastMove, MoveList, pieceImagePaths, SafeSquares } from '../../chess-logic/models';
 import { SelectedSquare } from './models';
 import { ChessBoardService } from './chess-board.service';
 import { Subscription } from 'rxjs';
+import { MoveListComponent } from "../move-list/move-list.component";
 
 @Component({
   selector: 'app-chess-board',
   standalone: true,
-  imports: [CommonModule,ChessBoardComponent],
+  imports: [CommonModule, ChessBoardComponent, MoveListComponent, MoveListComponent],
   templateUrl: './chess-board.component.html',
   styleUrl: './chess-board.component.css' 
 })
@@ -27,6 +28,7 @@ export class ChessBoardComponent {
   private promotionCoords: Coords | null = null;
   private promotedPiece: FENChar | null = null;
   public flipMode: boolean = false;
+  public gameHistoryPointer: number = 0;
 
   public get playerColor(): Color { 
     return this.chessBoard.playerColor; 
@@ -34,6 +36,14 @@ export class ChessBoardComponent {
 
   public get gameOverMessage(): string | undefined {
     return this.chessBoard.gameOverMessage;
+  }
+
+  public get moveList(): MoveList {
+    return this.chessBoard.moveList;
+  }
+
+  public get gameHistory(): GameHistory {
+    return this.chessBoard.gameHistory;
   }
 
   public flipBoard(): void {
@@ -137,6 +147,7 @@ export class ChessBoardComponent {
     this.checkState = this.chessBoard.checkState;
     this.lastMove = this.chessBoard.lastMove;
     this.unmarkingPreviouslySelectedAndSafeSquares();
+    this.gameHistoryPointer++;
   }
 
   public promotePiece(piece: FENChar): void {

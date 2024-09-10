@@ -1,14 +1,18 @@
 <div>
-    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === 0">
+    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === 0"
+        (click)="showPreviousPosition(0)">
         <mat-icon>first_page</mat-icon>
     </button>
-    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === 0">
+    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === 0"
+        (click)="showPreviousPosition(gameHistoryPointer - 1)">
         <mat-icon>navigate_before</mat-icon>
     </button>
-    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === gameHistoryLength - 1">
+    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === gameHistoryLength - 1"
+        (click)="showPreviousPosition(gameHistoryPointer + 1)">
         <mat-icon>navigate_next</mat-icon>
     </button>
-    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === gameHistoryLength - 1">
+    <button mat-icon-button color="primary" [disabled]="gameHistoryPointer === gameHistoryLength - 1"
+        (click)="showPreviousPosition(gameHistoryLength - 1)">
         <mat-icon>last_page</mat-icon>
     </button>
 </div>
@@ -19,10 +23,12 @@
             <div class="move-number">
                 {{moveNumber + 1}}.
             </div>
-            <div class="move" [ngClass]="{'current-move': moveNumber * 2 + 1 === gameHistoryPointer}">
+            <div class="move" [ngClass]="{'current-move': moveNumber * 2 + 1 === gameHistoryPointer}"
+            (click)="showPreviousPosition(moveNumber * 2 + 1)">
                 {{move[0]}}
             </div>
-            <div *ngIf="move[1]" class="move" [ngClass]="{'current-move': moveNumber * 2 + 2 === gameHistoryPointer}">
+            <div *ngIf="move[1]" class="move" [ngClass]="{'current-move': moveNumber * 2 + 2 === gameHistoryPointer}"
+            (click)="showPreviousPosition(moveNumber * 2 + 2)">
                 {{move[1]}}
             </div>
         </div>

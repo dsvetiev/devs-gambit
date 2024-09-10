@@ -5,11 +5,12 @@ import { StockfishService } from './stockfish.service';
 import { ChessBoardService } from '../chess-board/chess-board.service';
 import { firstValueFrom, Subscription } from 'rxjs';
 import { Color } from '../../chess-logic/models';
+import { MoveListComponent } from '../move-list/move-list.component';
 
 @Component({
   selector: 'app-computer-mode',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, MoveListComponent, ChessBoardComponent],
   templateUrl: '../chess-board/chess-board.component.html',
   styleUrl: '../chess-board/chess-board.component.css'
 })

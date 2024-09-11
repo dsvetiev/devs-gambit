@@ -473,7 +473,7 @@ export class ChessBoard {
 
     private storeMove(promotedPiece: FENChar | null): void {
         const { piece, currX, currY, prevX, prevY, moveType } = this._lastMove!;
-        let pieceName: string = !(piece instanceof Pawn) ? piece.FENChar : '';
+        let pieceName: string = !(piece instanceof Pawn) ? piece.FENChar.toUpperCase() : '';
         let move: string;
 
         if(moveType.has(MoveType.Castling)) move = currY - prevY === 2 ? 'O-O' : 'O-0-0';

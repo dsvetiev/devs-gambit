@@ -319,17 +319,18 @@ export class ChessBoard {
         this._lastMove = { prevX, prevY, currX: newX, currY: newY, piece, moveType };
         this._playerColor = this._playerColor === Color.White ? Color.Black : Color.White;
         this.isInCheck(this._playerColor, true);
-        this._safeSquares = this.findSafeSquares();
+        const safeSquares: SafeSquares = this.findSafeSquares();
 
         if(this._checkState.isInCheck) {
-            moveType.add(!this._safeSquares.size ? MoveType.CheckMate : MoveType.Check);
+            moveType.add(!safeSquares.size ? MoveType.CheckMate : MoveType.Check);
         } else if (!moveType.size) {
             moveType.add(MoveType.BasicMove);
         }
 
         this.storeMove(promotedPieceType);
         this.updateGameHistory();
-        
+
+        this._safeSquares = safeSquares;
         if(this._playerColor === Color.White) this.fullNumberOfMoves++;
         this._boardAsFEN = this.FENConverter.convertBoardToFEN(this.chessBoard, this._playerColor, this._lastMove, this.fiftyMoveCounter, this.fullNumberOfMoves);
         this.updateThreeFoldRepetitionDictionary(this._boardAsFEN);

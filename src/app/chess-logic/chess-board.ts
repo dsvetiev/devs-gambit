@@ -477,8 +477,8 @@ export class ChessBoard {
 
         if(moveType.has(MoveType.Castling)) move = currY - prevY === 2 ? 'O-O' : 'O-0-0';
         else {
-            move = pieceName + columns[prevY] + String(prevX + 1);
-            if(moveType.has(MoveType.Capture)) move += 'x';
+            move = pieceName + this.startingPieceCoordsNotation();
+            if(moveType.has(MoveType.Capture)) move += (piece instanceof Pawn) ? columns[prevY] + 'x' : 'x';
             move += columns[currY] + String(currX + 1);
 
             if(promotedPiece) move += '=' + promotedPiece.toUpperCase();
@@ -499,6 +499,37 @@ export class ChessBoard {
             checkState: {...this._checkState},
             lastMove: this._lastMove ? {...this._lastMove} : undefined
         });
+    }
+
+    private startingPieceCoordsNotation(): string {
+        const { piece: currPiece, prevX, prevY, currX, currY } = this._lastMove!;
+        if(currPiece instanceof Pawn || currPiece instanceof King) return '';
+
+        const samePiecesCoords: Coords[] = [{ x: prevX, y: prevY }];
+
+        for(let x = 0; x < this.chessBoardSize; x++) {
+            for(let y =0; y < this.chessBoardSize; y++) {
+                const piece: Piece | null = this.chessBoard[x][y];
+                if(!piece || (currX === x && currY === y)) continue;
+
+                if(piece.FENChar === currPiece.FENChar) {
+                    const safeSquares: Coords[] = this._safeSquares.get(x + ',' + y) || [];
+                    const pieceHasSameTargetSquare: boolean = safeSquares.some(coords => coords.x === currX && coords.y === currY);
+                    if(pieceHasSameTargetSquare) samePiecesCoords.push({ x, y });
+                }
+            }
+        }
+
+        if(samePiecesCoords.length === 1) return '';
+
+        const piecesFile = new Set(samePiecesCoords.map(coords => coords.y));
+        const piecesRank = new Set(samePiecesCoords.map(coords => coords.x));
+
+        if (piecesFile.size === samePiecesCoords.length) return columns[prevY];
+        if (piecesRank.size === samePiecesCoords.length) return String(prevX + 1);
+
+        return columns[prevY] + String(prevX + 1);
+
     }
     
 }

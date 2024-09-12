@@ -144,8 +144,7 @@ export class ChessBoardComponent {
   protected updateBoard(prevX: number, prevY: number, newX: number, newY: number, promotedPiece: FENChar | null): void {
     this.chessBoard.move(prevX, prevY, newX, newY, this.promotedPiece);
     this.chessBoardView = this.chessBoard.chessBoardView;
-    this.checkState = this.chessBoard.checkState;
-    this.lastMove = this.chessBoard.lastMove;
+    this.markLastMoveAndCheckState(this.chessBoard.lastMove, this.chessBoard.checkState);
     this.unmarkingPreviouslySelectedAndSafeSquares();
     this.gameHistoryPointer++;
   }
@@ -167,11 +166,18 @@ export class ChessBoardComponent {
     this.unmarkingPreviouslySelectedAndSafeSquares();
   }
 
+  private markLastMoveAndCheckState(lastMove: LastMove | undefined, checkState: CheckState): void {
+    this.lastMove = lastMove;
+    this.checkState = checkState;
+
+    if(this.lastMove) this.moveSound(this.lastMove.moveType);
+    else this.moveSound(new Set<MoveType>([MoveType.BasicMove]));
+  }
+
   public showPreviousPosition(moveIndex: number): void {
     const {board, checkState, lastMove} = this.gameHistory[moveIndex];
     this.chessBoardView = board;
-    this.checkState = checkState;
-    this.lastMove = lastMove;
+    this.markLastMoveAndCheckState(lastMove, checkState);
     this.gameHistoryPointer = moveIndex;
   }
 

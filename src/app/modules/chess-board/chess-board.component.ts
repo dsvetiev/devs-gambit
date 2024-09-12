@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChessBoard } from '../../chess-logic/chess-board';
-import { CheckState, Color, Coords, FENChar, GameHistory, LastMove, MoveList, pieceImagePaths, SafeSquares } from '../../chess-logic/models';
+import { CheckState, Color, Coords, FENChar, GameHistory, LastMove, MoveList, MoveType, pieceImagePaths, SafeSquares } from '../../chess-logic/models';
 import { SelectedSquare } from './models';
 import { ChessBoardService } from './chess-board.service';
 import { Subscription } from 'rxjs';
@@ -173,5 +173,18 @@ export class ChessBoardComponent {
     this.checkState = checkState;
     this.lastMove = lastMove;
     this.gameHistoryPointer = moveIndex;
+  }
+
+  private moveSound(moveType: Set<MoveType>): void {
+    const moveSound = new Audio('assets/sound/move.mp3');
+
+    if(moveType.has(MoveType.Promotion)) moveSound.src = 'assets/sound/promote.mp3';
+    else if(moveType.has(MoveType.Capture)) moveSound.src = 'assets/sound/capture.mp3';
+    else if(moveType.has(MoveType.Castling)) moveSound.src = 'assets/sound/castling.mp3';
+
+    if(moveType.has(MoveType.CheckMate)) moveSound.src = 'assets/sound/checkmate.mp3';
+    else if(moveType.has(MoveType.Check)) moveSound.src = 'assets/sound/check.mp3';
+
+    moveSound.play()
   }
 }

@@ -1,10 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ChessBoard } from '../../chess-logic/chess-board';
 import { CheckState, Color, Coords, FENChar, GameHistory, LastMove, MoveList, MoveType, pieceImagePaths, SafeSquares } from '../../chess-logic/models';
 import { SelectedSquare } from './models';
 import { ChessBoardService } from './chess-board.service';
-import { Subscription } from 'rxjs';
+import { filter, fromEvent, Subscription, tap } from 'rxjs';
 import { MoveListComponent } from "../move-list/move-list.component";
 
 @Component({
@@ -14,7 +14,7 @@ import { MoveListComponent } from "../move-list/move-list.component";
   templateUrl: './chess-board.component.html',
   styleUrl: './chess-board.component.css' 
 })
-export class ChessBoardComponent {
+export class ChessBoardComponent implements OnInit {
   public pieceImagePaths = pieceImagePaths;
 
   protected chessBoard = new ChessBoard();
@@ -53,6 +53,31 @@ export class ChessBoardComponent {
   private subscriptions$ = new Subscription();
 
   constructor(protected chessBoardService: ChessBoardService) { }
+  
+  public ngOnInit(): void {
+    const keyEventSubscription$: Subscription = fromEvent<KeyboardEvent>(document, 'keyup')
+    .pipe(
+      filter(event => event.key === 'ArrowRight' || event.key === 'ArrowLeft'),
+      tap(event => {
+        switch(event.key) {
+          case 'ArrowRight':
+            if (this.gameHistoryPointer === this.gameHistory.length - 1) return;
+            this.gameHistoryPointer++;
+            break;
+            case 'ArrowLeft':
+              if(this.gameHistoryPointer === 0) return;
+              this.gameHistoryPointer--;
+              break;
+              default:
+                break;
+        }
+        this.showPreviousPosition(this.gameHistoryPointer);
+      })
+    )
+    .subscribe();
+
+    this.subscriptions$.add(keyEventSubscription$);
+  }
  
    public promotionPieces(): FENChar[] {
     return this.playerColor === Color.White ? 

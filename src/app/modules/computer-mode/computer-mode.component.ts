@@ -21,7 +21,8 @@ export class ComputerModeComponent extends ChessBoardComponent implements OnInit
   ) {
     super(ChessBoardService);
   }
-  ngOnInit(): void {
+  public override ngOnInit(): void {
+    super.ngOnInit();
     const computerConfiSubscription$: Subscription = this.stockFishService.computerConfiguration$.subscribe({
       next: (computerConfiguration) => {
         if(computerConfiguration.color === Color.White) this.flipBoard();
@@ -45,7 +46,8 @@ export class ComputerModeComponent extends ChessBoardComponent implements OnInit
     this.computerSubscriptions$.add(computerConfiSubscription$);
   }
 
-  public ngOnDestroy(): void {
+  public override ngOnDestroy(): void {
+    super.ngOnDestroy()
     this.computerSubscriptions$.unsubscribe();
   }
 }

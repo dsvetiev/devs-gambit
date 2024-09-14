@@ -14,7 +14,7 @@ import { MoveListComponent } from "../move-list/move-list.component";
   templateUrl: './chess-board.component.html',
   styleUrl: './chess-board.component.css' 
 })
-export class ChessBoardComponent implements OnInit {
+export class ChessBoardComponent implements OnInit, OnDestroy {
   public pieceImagePaths = pieceImagePaths;
 
   protected chessBoard = new ChessBoard();
@@ -77,6 +77,10 @@ export class ChessBoardComponent implements OnInit {
     .subscribe();
 
     this.subscriptions$.add(keyEventSubscription$);
+  }
+
+  public ngOnDestroy(): void {
+    this.subscriptions$.unsubscribe();
   }
  
    public promotionPieces(): FENChar[] {

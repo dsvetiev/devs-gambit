@@ -1,27 +1,67 @@
-# DevsGambit
+# Dev's Gambit
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 18.2.0.
+Welcome to the Dev's Gambit project!
 
-## Development server
+Dev's Gambit is a web application that allows users to play chess against a computer or a friend.
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+## Functional Requirements
 
-## Code scaffolding
+### Entities:
+- **Game**: Each game has a unique ID, players, moves, and other relevant details.
+- **User**: Users can start new games, view ongoing games, and review past games.
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Features:
+- **Play Against Computer**: Users can play chess against a computer opponent.
+- **Play Against Friend**: Users can play chess against another human player.
+- **View Game History**: Users can view the history of moves in a game.
 
-## Build
+## Components
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+- **Home**: The landing page of the application.
+- **ChessBoard**: Displays the chessboard and handles game logic.
+- **MoveList**: Shows the list of moves made in the game.
+- **ComputerMode**: Handles the logic for playing against the computer.
+- **NavBar**: Navigation bar for the application.
 
-## Running unit tests
+## Technologies Used
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+- **Angular**: Framework for building web applications.
+- **Angular Material**: UI component library for Angular.
+- **RxJS**: Library for reactive programming using Observables.
+- **TypeScript**: Typed superset of JavaScript.
+- **SCSS**: CSS preprocessor for styling.
 
-## Running end-to-end tests
+## Available Scripts
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+In the project directory, you can run:
 
-## Further help
+### `npm start`
+Runs the app in the development mode.
+Open [http://localhost:4200](http://localhost:4200) to view it in your browser.
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+The page will reload when you make changes.
+You may also see any lint errors in the console.
+
+### `npm run build`
+Builds the app for production to the `dist` folder.
+It correctly bundles Angular in production mode and optimizes the build for the best performance.
+
+## Installation
+To install and run the Student Management Frontend project locally, follow these steps:
+
+1. Clone the repository:
+    ```sh
+    git clone https://github.com/dsvetiev/devs-gambit.git
+    ```
+
+2. Install the dependencies:
+    ```sh
+    npm install
+    ```
+
+3. Start the application:
+    ```sh
+    npm run start
+    ```
+
+5. Open your browser and visit `http://localhost:4200` to access Dev's Gambit.
